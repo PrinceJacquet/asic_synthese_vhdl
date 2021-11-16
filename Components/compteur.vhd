@@ -1,16 +1,19 @@
+--Mouloud ZIANE 
+--Prince Jacquet
+--M2 SME
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.std_logic_unsigned.all;
 
 
-entity compteursy is
+entity compteur is
     port(
         clock, opt24,init12,enable : in  std_logic;
         BCDu, BCDd                 : out std_logic_vector (3 downto 0)
     );
-end entity compteursy;
+end entity compteur;
 
-architecture synthetisable of compteursy is
+architecture synthetisable of compteur is
 
     signal countingReg  : std_logic_vector (4 downto 0); --24 max == 0b11000
     signal countingShow : std_logic_vector (4 downto 0); --24 max == 0b11000
@@ -49,10 +52,11 @@ begin
 
 
 
-    countingShow <= (countingReg - 12 )when ( ( 12 < countingReg) and (opt24_s = '0'))
-    else countingReg;
+    countingShow <= (countingReg - 12 )when ( ( countingReg >= 13) and (opt24_s = '0')) else 
+					"01100" when ((countingReg = 0) and (opt24_s = '0'))else 
+					countingReg ;
 
-    unit <= countingShow - 10 when countingShow > 10 and countingShow < 20 else
+    unit <= countingShow - 10 when countingShow >= 10 and countingShow < 20 else
         countingShow - 20 when countingShow >= 20 else
         countingShow ; --when countingShow < 10;
 
@@ -62,5 +66,4 @@ begin
         "0010" when countingShow >= 20 ;
 
 end architecture synthetisable;
-
 
